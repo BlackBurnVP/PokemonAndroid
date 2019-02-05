@@ -180,6 +180,9 @@ var ACCESSLOCATION=123 //Code of permission to request this
     var playerPower = 0.0
     var listPokemon = ArrayList<Pokemon>()
 
+    /**
+     * Add pockemons to game
+     */
     private fun loadPockemons(){
         listPokemon.add(Pokemon(R.drawable.bulbasaur, "Bulbasar", "description", 55.0, 37.334, -122.0))
         listPokemon.add(Pokemon(R.drawable.charmander, "Charmander", "description", 90.5, 37.34, -122.0))

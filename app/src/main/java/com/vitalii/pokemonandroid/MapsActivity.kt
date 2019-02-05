@@ -1,5 +1,6 @@
 package com.vitalii.pokemonandroid
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -66,6 +67,7 @@ var ACCESSLOCATION=123 //Code of permission to request this
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @SuppressLint("MissingPermission")
     fun GetUserLocation(){
         Toast.makeText(this,"User location is on",Toast.LENGTH_SHORT).show()
         //TODO: Will implement later
@@ -149,16 +151,23 @@ var ACCESSLOCATION=123 //Code of permission to request this
 
                         //Show Pokemons
 
-                        for (pokemon in listPokemon.indices){
-                            var newPokemon = listPokemon[pokemon]
+                        for (pokemon in 0..listPokemon.size-1){
+                            val newPokemon = listPokemon[pokemon]
                             if(!newPokemon.isCatched){
-                                val pokemonLocation = LatLng(newPokemon.latitude, newPokemon.logitude)
+                                val pokemonLocation = LatLng(newPokemon.location!!.latitude, newPokemon.location!!.longitude)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(pokemonLocation)
                                         .title(newPokemon.name)
-                                        .snippet(newPokemon.des)
-                                        .icon(BitmapDescriptorFactory.fromResource(newPokemon.image)))
+                                        .snippet("${newPokemon.des}, power:${newPokemon.power}")
+                                        .icon(BitmapDescriptorFactory.fromResource(newPokemon.image!!)))
+
+                                if(location!!.distanceTo(newPokemon.location)<2){
+                                    newPokemon.isCatched = true
+                                    listPokemon[pokemon] = newPokemon
+                                    playerPower += newPokemon.power!!
+                                    Toast.makeText(applicationContext,"You catch new Pokemon. Your power is $playerPower",Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
@@ -168,12 +177,12 @@ var ACCESSLOCATION=123 //Code of permission to request this
         }
     }
 
+    var playerPower = 0.0
     var listPokemon = ArrayList<Pokemon>()
 
     private fun loadPockemons(){
-
-        listPokemon.add(Pokemon(R.drawable.bulbasaur, "Bulbasar", "description", 55.0, 37.33, -122.0))
-        listPokemon.add(Pokemon(R.drawable.charmander, "Charmander", "description", 90.5, 37.33, -122.0))
-        listPokemon.add(Pokemon(R.drawable.squirtle, "Squirtle", "description", 33.0,  37.33, -122.0))
+        listPokemon.add(Pokemon(R.drawable.bulbasaur, "Bulbasar", "description", 55.0, 37.334, -122.0))
+        listPokemon.add(Pokemon(R.drawable.charmander, "Charmander", "description", 90.5, 37.34, -122.0))
+        listPokemon.add(Pokemon(R.drawable.squirtle, "Squirtle", "description", 33.0,  37.35, -122.0))
     }
 }
